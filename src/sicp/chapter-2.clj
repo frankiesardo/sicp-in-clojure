@@ -1204,3 +1204,149 @@
                              (multiplicand exp)))
         :else (throw (Exception. "unknown expression type -- DERIV" exp))))
 
+;; Exercise 2.56
+
+(defn exponentiation? [x]
+  (and (coll? x) (= (first x) '**)))
+
+(defn base [p] (second p))
+
+(defn exponent [p] (second (rest p)))
+
+(defn make-exponentiation [b e]
+  (cond (= e 0) 1
+        (= e 1) b
+        (or (= b 1) (= b 0)) b
+        :else (list '** b e)))
+
+
+(defn deriv [exp var]
+  (cond (number? exp) 0
+        (variable? exp) (if (same-variable? exp var) 1 0)
+        (sum? exp) (make-sum (deriv (addend exp) var)
+                             (deriv (augend exp) var))
+        (product? exp) (make-sum
+                         (make-product (multiplier exp)
+                                       (deriv (multiplicand exp) var))
+                         (make-product (deriv (multiplier exp) var)
+                                       (multiplicand exp)))
+        (exponentiation? exp) (make-product
+                               (make-product (exponent exp)
+                                             (make-exponentiation (base exp) (dec (exponent exp))))
+                               (deriv (base exp) var)
+                               )
+        :else (throw (Exception. "unknown expression type -- DERIV" exp))))
+
+
+;; Exercise 2.57
+
+(defn augend [s]
+  (let [a (rest (drop 1 s))]
+    (if (= 1 (count a)) a
+      (cons '+ a))))
+
+(defn multiplicand [s]
+  (let [m (rest (drop 1 s))]
+    (if (= 1 (count m)) m
+      (cons '* m))))
+
+;; Exercise 2.58
+
+(defn make-sum [a1 a2]
+  (cond (= a1 0) a2
+        (= a2 0) a1
+        (and (number? a1) (number? a2)) (+ a1 a2)
+        :else (list a1 '+ a2)))
+
+(defn make-product [m1 m2]
+  (cond (or (= m1 0) (= m2 0)) 0
+        (= m1 1) m2
+        (= m2 1) m1
+        (and (number? m1) (number? m2)) (* m1 m2)
+        :else (list m1 '* m2)))
+
+(defn sum? [x]
+  (and (coll? x) (= (second x) '+)))
+
+(defn addend [s] (first s))
+
+(defn augend [s] (second (rest s)))
+
+(defn product? [x]
+  (and (coll? x) (= (second x) '*)))
+
+(defn multiplier [p] (first p))
+
+(defn multiplicand [p] (second (rest p)))
+
+(defn exponentiation? [x]
+  (and (coll? x) (= (second x) '**)))
+
+(defn base [p] (first p))
+
+(defn exponent [p] (second (rest p)))
+
+(defn make-exponentiation [b e]
+  (cond (= e 0) 1
+        (= e 1) b
+        (or (= b 1) (= b 0)) b
+        :else (list b '** e)))
+
+; b)
+
+
+(defn sum? [x] (check-symbol '+ x))
+
+(defn addend [s] (left '+ s))
+
+(defn augend [s] (right '+ s))
+
+(defn product? [x] (check-symbol '* x))
+
+(defn multiplier [p] (left '* p))
+
+(defn multiplicand [p] (right '* p))
+
+(defn exponentiation? [x] (check-symbol '** x))
+
+(defn base [e] (left '** e))
+
+(defn exponent [e] (right '** e))
+
+(defn check-symbol [s x] (and (coll? x) (memq s x)))
+
+(defn left [s x]
+  (let [exp (take-while #(not= % s) x)]
+    (if (= 1 (count exp)) (first exp) exp)))
+
+(defn right [s x]
+  (let [exp (rest (memq s x))]
+    (if (= 1 (count exp)) (first exp) exp)))
+
+(defn make-sum [a1 a2]
+  (cond (= a1 0) a2
+        (= a2 0) a1
+        (and (number? a1) (number? a2)) (+ a1 a2)
+        (and (coll? a1) (coll? a2)) (concat a1 '(+) a2)
+        (coll? a1) (concat a1 ['+ a2])
+        (coll? a2) (concat [a1 '+] a2)
+        :else (list a1 '+ a2)))
+
+(defn make-product [m1 m2]
+  (cond (or (= m1 0) (= m2 0)) 0
+        (= m1 1) m2
+        (= m2 1) m1
+        (and (number? m1) (number? m2)) (* m1 m2)
+        (and (coll? m1) (coll? m2) (not (sum? m1)) (not (sum? m2))) (concat m1 '(*) m2)
+        (and (coll? m1) (not (sum? m1))) (concat m1 ['* m2])
+        (and (coll? m2) (not (sum? m2))) (concat [m1 '*] m2)
+        :else (list m1 '* m2)))
+
+(defn make-exponentiation [b e]
+  (cond (= e 0) 1
+        (= e 1) b
+        (or (= b 1) (= b 0)) b
+        (and (number? b) (number? e)) (* b e)
+        :else (list b '** e)))
+
+
