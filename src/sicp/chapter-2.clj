@@ -46,8 +46,8 @@
 
 (defn gcd [a b]
   (if (= b 0)
-      a
-      (gcd b (rem a b))))
+    a
+    (gcd b (rem a b))))
 
 (defn make-rat [n d]
   (let [g (gcd n d)]
@@ -215,8 +215,8 @@
 ;; Exercise 2.8
 
 (defn sub-interval [x y]
-    (make-interval (- (lower-bound x) (upper-bound y))
-                   (- (upper-bound x) (lower-bound y))))
+  (make-interval (- (lower-bound x) (upper-bound y))
+                 (- (upper-bound x) (lower-bound y))))
 
 ;; Exercise 2.9
 
@@ -246,7 +246,7 @@
     (throw (ArithmeticException. "Divide by zero"))
     (mul-interval x
                   (make-interval (/ 1.0 (upper-bound y))
-                               (/ 1.0 (lower-bound y))))))
+                                 (/ 1.0 (lower-bound y))))))
 
 ;; Exercise 2.11
 
@@ -256,32 +256,32 @@
         ylo (lower-bound y)
         yup (upper-bound y)]
     (cond (and (>= xlo 0) (>= xup 0) (>= ylo 0) (>= yup 0)) ; [+, +] * [+, +]
-            (make-interval (* xlo ylo) (* xup yup))
+          (make-interval (* xlo ylo) (* xup yup))
 
           (and (>= xlo 0) (>= xup 0) (<= ylo 0) (>= yup 0)) ; [+, +] * [-, +]
-            (make-interval (* xup ylo) (* xup yup))
+          (make-interval (* xup ylo) (* xup yup))
 
           (and (>= xlo 0) (>= xup 0) (<= ylo 0) (<= yup 0)) ; [+, +] * [-, -]
-            (make-interval (* xup ylo) (* xlo yup))
+          (make-interval (* xup ylo) (* xlo yup))
 
           (and (<= xlo 0) (>= xup 0) (>= ylo 0) (>= yup 0)) ; [-, +] * [+, +]
-            (make-interval (* xlo yup) (* xup yup))
+          (make-interval (* xlo yup) (* xup yup))
 
           (and (<= xlo 0) (>= xup 0) (<= ylo 0) (>= yup 0)) ; [-, +] * [-, +]
-            (make-interval (min (* xup ylo) (* xlo yup))
+          (make-interval (min (* xup ylo) (* xlo yup))
                          (max (* xlo ylo) (* xup yup)))
 
           (and (<= xlo 0) (>= xup 0) (<= ylo 0) (<= yup 0)) ; [-, +] * [-, -]
-            (make-interval (* xup ylo) (* xlo ylo))
+          (make-interval (* xup ylo) (* xlo ylo))
 
           (and (<= xlo 0) (<= xup 0) (>= ylo 0) (>= yup 0)) ; [-, -] * [+, +]
-            (make-interval (* xlo yup) (* xup ylo))
+          (make-interval (* xlo yup) (* xup ylo))
 
           (and (<= xlo 0) (<= xup 0) (<= ylo 0) (>= yup 0)) ; [-, -] * [-, +]
-            (make-interval (* xlo yup) (* xlo ylo))
+          (make-interval (* xlo yup) (* xlo ylo))
 
           (and (<= xlo 0) (<= xup 0) (<= ylo 0) (<= yup 0)) ; [-, -] * [-, -]
-            (make-interval (* xup yup) (* xlo ylo)))))
+          (make-interval (* xup yup) (* xlo ylo)))))
 
 (mul-interval interval1 interval2)
 
@@ -316,14 +316,14 @@
 ;; Exercise 2.14
 
 (defn par1 [r1 r2]
-   (div-interval (mul-interval r1 r2)
-                 (add-interval r1 r2)))
+  (div-interval (mul-interval r1 r2)
+                (add-interval r1 r2)))
 
 (defn par2 [r1 r2]
-   (let [one (make-interval 1 1)]
-      (div-interval one
-                    (add-interval (div-interval one r1)
-                                  (div-interval one r2)))))
+  (let [one (make-interval 1 1)]
+    (div-interval one
+                  (add-interval (div-interval one r1)
+                                (div-interval one r2)))))
 
 (par1 interval1 interval2)
 (par2 interval1 interval2)
@@ -375,7 +375,7 @@
         (or (< amount 0) (no-more? coin-values)) 0
         :else (+ (cc amount (except-first-denomination coin-values))
                  (cc (- amount (first-denomination coin-values))
-                coin-values))))
+                     coin-values))))
 
 (cc 100 us-coins)
 (cc 100 uk-coins)
@@ -404,8 +404,8 @@
 
 (defn square-list [items]
   (if (empty? items)
-      []
-      (cons (* (first items) (first items))  (square-list (rest items)))))
+    []
+    (cons (* (first items) (first items))  (square-list (rest items)))))
 
 (square-list [1 23 4 5])
 
@@ -419,10 +419,10 @@
 (defn square-list [items]
   (defn iter [things answer]
     (if (empty? things)
-        answer
-        (iter (rest things)
-              (cons (#(* % %) (first things))
-                    answer))))
+      answer
+      (iter (rest things)
+            (cons (#(* % %) (first things))
+                  answer))))
   (iter items []))
 
 (square-list [1 2 3 4])
@@ -432,12 +432,13 @@
 (defn square-list [items]
   (defn iter [things answer]
     (if (empty? things)
-        answer
-        (iter (rest things)
-              (cons answer
-                    (#(* % %) (first things))))))
+      answer
+      (iter (rest things)
+            (cons answer
+                  (#(* % %) (first things))))))
   (iter items nil))
 
+; This should fail
 (square-list [1 2 3 4])
 
 ; cons takes an element and a list. In that example we should use append
@@ -566,8 +567,8 @@
 (defn square-tree [tree]
   (map (fn [sub-tree]
          (if (coll? sub-tree)
-             (square-tree sub-tree)
-             (* sub-tree sub-tree)))
+           (square-tree sub-tree)
+           (* sub-tree sub-tree)))
        tree))
 
 (square-tree (list 1 (list 2 (list 3 4) 5) (list 6 7)))
@@ -577,8 +578,8 @@
 (defn tree-map [f tree]
   (map (fn [sub-tree]
          (if (coll? sub-tree)
-             (tree-map f sub-tree)
-             (f sub-tree)))
+           (tree-map f sub-tree)
+           (f sub-tree)))
        tree))
 
 (tree-map #(* % %) (list 1 (list 2 (list 3 4) 5) (list 6 7)))
@@ -594,9 +595,9 @@
 
 (defn accumulate [op initial sequence]
   (if (empty? sequence)
-      initial
-      (op (first sequence)
-          (accumulate op initial (rest sequence)))))
+    initial
+    (op (first sequence)
+        (accumulate op initial (rest sequence)))))
 
 (defn map' [p sequence]
   (accumulate (fn [x y] (cons (p x) y)) [] sequence))
@@ -634,8 +635,8 @@
 
 (defn accumulate-n [op init seqs]
   (if (empty? (first seqs)) nil
-      (cons (accumulate op init (map first seqs))
-            (accumulate-n op init (map rest seqs)))))
+    (cons (accumulate op init (map first seqs))
+          (accumulate-n op init (map rest seqs)))))
 
 (accumulate-n + 0 [[1 2 3] [4 5 6] [7 8 9]])
 
@@ -672,16 +673,16 @@
 
 (defn fold-right [op initial sequence]
   (if (nil? sequence)
-      initial
-      (op (first sequence)
-          (fold-right op initial (next sequence)))))
+    initial
+    (op (first sequence)
+        (fold-right op initial (next sequence)))))
 
 (defn fold-left [op initial sequence]
   (defn iter [result rest]
     (if (nil? rest)
-        result
-        (iter (op result (first rest))
-              (next rest))))
+      result
+      (iter (op result (first rest))
+            (next rest))))
   (iter initial sequence))
 
 
@@ -697,7 +698,7 @@
 
 (fold-left + 0 (list 1 2 3))
 
-;; Exerise 2.39
+;; Exercise 2.39
 
 (defn reverse [sequence]
   (fold-right (fn [x y] (append y [x])) [] sequence))
@@ -766,27 +767,27 @@
   (cons new-row rest-of-queens))
 
 (defn safe? [k positions]
-   (def candidate (first positions))
-   (defn safe-iter [top bot remain]
-     (cond (empty? remain) true
-           (or (= (first remain) candidate)
-                (= (first remain) top)
-                (= (first remain) bot)) false
-           :else
-            (safe-iter (- top 1) (+ bot 1) (rest remain))))
-   (safe-iter (- candidate 1) (+ candidate 1) (rest positions)))
+  (def candidate (first positions))
+  (defn safe-iter [top bot remain]
+    (cond (empty? remain) true
+          (or (= (first remain) candidate)
+              (= (first remain) top)
+              (= (first remain) bot)) false
+          :else
+          (safe-iter (- top 1) (+ bot 1) (rest remain))))
+  (safe-iter (- candidate 1) (+ candidate 1) (rest positions)))
 
 (defn queens [board-size]
   (defn queen-cols [k]
     (if (= k 0)
-        (list empty-board)
-        (filter (fn [positions] (safe? k positions))
-         (mapcat
-          (fn [rest-of-queens]
-            (map (fn [new-row]
-                   (adjoin-position new-row k rest-of-queens))
-                 (range 1 (inc board-size))))
-          (queen-cols (dec k))))))
+      (list empty-board)
+      (filter (fn [positions] (safe? k positions))
+              (mapcat
+               (fn [rest-of-queens]
+                 (map (fn [new-row]
+                        (adjoin-position new-row k rest-of-queens))
+                      (range 1 (inc board-size))))
+               (queen-cols (dec k))))))
   (queen-cols board-size))
 
 (queens 4)
@@ -796,14 +797,14 @@
 (defn queens [board-size]
   (defn queen-cols [k]
     (if (= k 0)
-        (list empty-board)
-        (filter (fn [positions] (safe? k positions))
-         (mapcat
-          (fn [new-row]
-            (map (fn [rest-of-queens]
-                   (adjoin-position new-row k rest-of-queens))
-                 (queen-cols (dec k))))
-          (range 1 (inc board-size))))))
+      (list empty-board)
+      (filter (fn [positions] (safe? k positions))
+              (mapcat
+               (fn [new-row]
+                 (map (fn [rest-of-queens]
+                        (adjoin-position new-row k rest-of-queens))
+                      (queen-cols (dec k))))
+               (range 1 (inc board-size))))))
   (queen-cols board-size))
 
 ;; Exercise 2.43
@@ -817,9 +818,9 @@
 
 (defn up-split [painter n]
   (if (= n 0)
-      painter
-      (let [smaller (up-split painter (- n 1))]
-        (below painter (beside smaller smaller)))))
+    painter
+    (let [smaller (up-split painter (- n 1))]
+      (below painter (beside smaller smaller)))))
 
 ;; Exercise 2.45
 
@@ -835,13 +836,13 @@
 
 ;; Exercise 2.46
 
-(defn make-vec [x y])
+(defn make-vect [x y])
 (defn xcor-vect [v] (v 0))
 (defn ycor-vect [v] (v 1))
 
-(defn add-vec [v1 v2] (make-vec (+ (xcor-vect v1) (xcor-vect v2)) (+ (ycor-vect v1) (ycor-vect v2))))
-(defn sub-vec [v1 v2] (make-vec (- (xcor-vect v1) (xcor-vect v2)) (- (ycor-vect v1) (ycor-vect v2))))
-(defn scale-vec [v s] (make-vec (* s (xcor-vect v)) (* (ycor-vect v))))
+(defn add-vect [v1 v2] (make-vect (+ (xcor-vect v1) (xcor-vect v2)) (+ (ycor-vect v1) (ycor-vect v2))))
+(defn sub-vect [v1 v2] (make-vect (- (xcor-vect v1) (xcor-vect v2)) (- (ycor-vect v1) (ycor-vect v2))))
+(defn scale-vect [v s] (make-vect (* s (xcor-vect v)) (* (ycor-vect v))))
 
 ;; Exercise 2.47
 
@@ -873,252 +874,268 @@
 
 (defn make-segment [v1 v2] [v1 v2])
 (defn start-segment [s] (s 0))
-(defn end-segment [s] (S 1))
+(defn end-segment [s] (s 1))
 
 ;; Exercise 2.49
 
 ; The painter that draws the outline of the designated frame.
 (def outline-segments
- (list
-  (make-segment
-   (make-vect 0.0 0.0)
-   (make-vect 0.0 0.99))
-  (make-segment
-   (make-vect 0.0 0.0)
-   (make-vect 0.99 0.0))
-  (make-segment
-   (make-vect 0.99 0.0)
-   (make-vect 0.99 0.99))
-  (make-segment
-   (make-vect 0.0 0.99)
-   (make-vect 0.99 0.99))))
+  (list
+   (make-segment
+    (make-vect 0.0 0.0)
+    (make-vect 0.0 0.99))
+   (make-segment
+    (make-vect 0.0 0.0)
+    (make-vect 0.99 0.0))
+   (make-segment
+    (make-vect 0.99 0.0)
+    (make-vect 0.99 0.99))
+   (make-segment
+    (make-vect 0.0 0.99)
+    (make-vect 0.99 0.99))))
 
 ; The painter that draws an 'X' by connecting opposite corners of the frame.
 (def x-segments
- (list
-  (make-segment
-   (make-vect 0.0 0.0)
-   (make-vect 0.99 0.99))
-  (make-segment
-   (make-vect 0.0 0.99)
-   (make-vect 0.99 0.0))))
+  (list
+   (make-segment
+    (make-vect 0.0 0.0)
+    (make-vect 0.99 0.99))
+   (make-segment
+    (make-vect 0.0 0.99)
+    (make-vect 0.99 0.0))))
 
 ; The painter that draws a diamond shape by connecting the midpoints of the sides of the frame.
 (def diamond-segments
- (list
-  (make-segment
-   (make-vect 0.0 0.5)
-   (make-vect 0.5 0.0))
-  (make-segment
-   (make-vect 0.0 0.5)
-   (make-vect 0.5 0.99))
-  (make-segment
-   (make-vect 0.5 0.99)
-   (make-vect 0.99 0.5))
-  (make-segment
-   (make-vect 0.99 0.5)
-   (make-vect 0.5 0.0))))
+  (list
+   (make-segment
+    (make-vect 0.0 0.5)
+    (make-vect 0.5 0.0))
+   (make-segment
+    (make-vect 0.0 0.5)
+    (make-vect 0.5 0.99))
+   (make-segment
+    (make-vect 0.5 0.99)
+    (make-vect 0.99 0.5))
+   (make-segment
+    (make-vect 0.99 0.5)
+    (make-vect 0.5 0.0))))
 
 ; The wave painter.
 (def wave-segments
- (list
-  (make-segment
-   (make-vect 0.006 0.840)
-   (make-vect 0.155 0.591))
-  (make-segment
-   (make-vect 0.006 0.635)
-   (make-vect 0.155 0.392))
-  (make-segment
-   (make-vect 0.304 0.646)
-   (make-vect 0.155 0.591))
-  (make-segment
-   (make-vect 0.298 0.591)
-   (make-vect 0.155 0.392))
-  (make-segment
-   (make-vect 0.304 0.646)
-   (make-vect 0.403 0.646))
-  (make-segment
-   (make-vect 0.298 0.591)
-   (make-vect 0.354 0.492))
-  (make-segment
-   (make-vect 0.403 0.646)
-   (make-vect 0.348 0.845))
-  (make-segment
-   (make-vect 0.354 0.492)
-   (make-vect 0.249 0.000))
-  (make-segment
-   (make-vect 0.403 0.000)
-   (make-vect 0.502 0.293))
-  (make-segment
-   (make-vect 0.502 0.293)
-   (make-vect 0.602 0.000))
-  (make-segment
-   (make-vect 0.348 0.845)
-   (make-vect 0.403 0.999))
-  (make-segment
-   (make-vect 0.602 0.999)
-   (make-vect 0.652 0.845))
-  (make-segment
-   (make-vect 0.652 0.845)
-   (make-vect 0.602 0.646))
-  (make-segment
-   (make-vect 0.602 0.646)
-   (make-vect 0.751 0.646))
-  (make-segment
-   (make-vect 0.751 0.646)
-   (make-vect 0.999 0.343))
-  (make-segment
-   (make-vect 0.751 0.000)
-   (make-vect 0.597 0.442))
-  (make-segment
-   (make-vect 0.597 0.442)
-   (make-vect 0.999 0.144))))
+  (list
+   (make-segment
+    (make-vect 0.006 0.840)
+    (make-vect 0.155 0.591))
+   (make-segment
+    (make-vect 0.006 0.635)
+    (make-vect 0.155 0.392))
+   (make-segment
+    (make-vect 0.304 0.646)
+    (make-vect 0.155 0.591))
+   (make-segment
+    (make-vect 0.298 0.591)
+    (make-vect 0.155 0.392))
+   (make-segment
+    (make-vect 0.304 0.646)
+    (make-vect 0.403 0.646))
+   (make-segment
+    (make-vect 0.298 0.591)
+    (make-vect 0.354 0.492))
+   (make-segment
+    (make-vect 0.403 0.646)
+    (make-vect 0.348 0.845))
+   (make-segment
+    (make-vect 0.354 0.492)
+    (make-vect 0.249 0.000))
+   (make-segment
+    (make-vect 0.403 0.000)
+    (make-vect 0.502 0.293))
+   (make-segment
+    (make-vect 0.502 0.293)
+    (make-vect 0.602 0.000))
+   (make-segment
+    (make-vect 0.348 0.845)
+    (make-vect 0.403 0.999))
+   (make-segment
+    (make-vect 0.602 0.999)
+    (make-vect 0.652 0.845))
+   (make-segment
+    (make-vect 0.652 0.845)
+    (make-vect 0.602 0.646))
+   (make-segment
+    (make-vect 0.602 0.646)
+    (make-vect 0.751 0.646))
+   (make-segment
+    (make-vect 0.751 0.646)
+    (make-vect 0.999 0.343))
+   (make-segment
+    (make-vect 0.751 0.000)
+    (make-vect 0.597 0.442))
+   (make-segment
+    (make-vect 0.597 0.442)
+    (make-vect 0.999 0.144))))
 
 
 ;; Exercise 2.50
+
+(defn frame-coord-map [frame]
+  (fn [v]
+    (add-vect
+     (origin-frame frame)
+     (add-vect (scale-vect (xcor-vect v)
+                           (edge1-frame frame))
+               (scale-vect (ycor-vect v)
+                           (edge2-frame frame))))))
 
 (defn transform-painter [painter origin corner1 corner2]
   (fn [frame]
     (let [m (frame-coord-map frame) new-origin (m origin)]
       (painter (make-frame new-origin
-                     (sub-vect (m corner1) new-origin)
-                     (sub-vect (m corner2) new-origin))))))
+                           (sub-vect (m corner1) new-origin)
+                           (sub-vect (m corner2) new-origin))))))
 
 
-(defn flip-horizontal [painter]
-   ((transform-painter (make-vect 1.0 0.0)
-                       (make-vect 0.0 0.0)
-                       (make-vect 1.0 1.0))
-    painter))
+(defn flip-horiz [painter]
+  ((transform-painter (make-vect 1.0 0.0)
+                      (make-vect 0.0 0.0)
+                      (make-vect 1.0 1.0))
+   painter))
 
-(defn rotate-180 [painter]
-   ((transform-painter (make-vect 1.0 1.0)
-                       (make-vect 0.0 1.0)
-                       (make-vect 1.0 0.0))
-    painter))
+(defn rotate180 [painter]
+  ((transform-painter (make-vect 1.0 1.0)
+                      (make-vect 0.0 1.0)
+                      (make-vect 1.0 0.0))
+   painter))
 
-(defn rotate-270 [painter]
-   ((transform-painter (make-vect 0.0 1.0)
-                       (make-vect 0.0 0.0)
-                       (make-vect 1.0 1.0))
-    painter))
+(defn rotate270 [painter]
+  ((transform-painter (make-vect 0.0 1.0)
+                      (make-vect 0.0 0.0)
+                      (make-vect 1.0 1.0))
+   painter))
 
 ;; Exercise 2.51
 
 (defn beside [painter1 painter2]
-   (let [split-point (make-vect 0.5 0.0)
-         paint-left  (transform-painter painter1
-                            (make-vect 0.0 0.0)
-                            split-point
-                            (make-vect 0.0 1.0))
-         paint-right (transform-painter painter2
-                            split-point
-                           (make-vect 1.0 0.0)
-                           (make-vect 0.5 1.0))
-         ]
-     (fn [frame]
-       (paint-left frame)
-       (paint-right frame))))
+  (let [split-point (make-vect 0.5 0.0)
+        paint-left  (transform-painter painter1
+                                       (make-vect 0.0 0.0)
+                                       split-point
+                                       (make-vect 0.0 1.0))
+        paint-right (transform-painter painter2
+                                       split-point
+                                       (make-vect 1.0 0.0)
+                                       (make-vect 0.5 1.0))
+        ]
+    (fn [frame]
+      (paint-left frame)
+      (paint-right frame))))
 
 (defn below [painter1 painter2]
-   (let [split-point (make-vect 0.0 0.5)
-         paint-bottom ((transform-painter
-                        (make-vect 0.0 0.0)
-                        (make-vect 1.0 0.0)
-                        split-point) painter1)
-         paint-top ((transform-painter
-                     split-point
-                     (make-vect 1.0 0.5)
-                     (make-vect 0.0 1.0)) painter2)
-         ]
-     (fn (frame)
-     (paint-bottom frame)
-     (paint-top frame))))
+  (let [split-point (make-vect 0.0 0.5)
+        paint-bottom ((transform-painter
+                       (make-vect 0.0 0.0)
+                       (make-vect 1.0 0.0)
+                       split-point) painter1)
+        paint-top ((transform-painter
+                    split-point
+                    (make-vect 1.0 0.5)
+                    (make-vect 0.0 1.0)) painter2)
+        ]
+    (fn [frame]
+      (paint-bottom frame)
+      (paint-top frame))))
 
-(defn rotate-90 [painter]
- ((transform-painter (make-vect 1.0 0.0)
-                     (make-vect 1.0 1.0)
-                     (make-vect 0.0 0.0))
+(defn rotate90 [painter]
+  ((transform-painter (make-vect 1.0 0.0)
+                      (make-vect 1.0 1.0)
+                      (make-vect 0.0 0.0))
    painter))
 
 (defn below [painter1 painter2]
-   (rotate-90 (beside (rotate-270 painter1) (rotate-270 painter2))))
+  (rotate90 (beside (rotate270 painter1) (rotate270 painter2))))
 
 ;; Exercise 2.52
 
 (def wave-segments
- (list
-  (make-segment
-   (make-vect 0.006 0.840)
-   (make-vect 0.155 0.591))
-  (make-segment
-   (make-vect 0.006 0.635)
-   (make-vect 0.155 0.392))
-  (make-segment
-   (make-vect 0.304 0.646)
-   (make-vect 0.155 0.591))
-  (make-segment
-   (make-vect 0.298 0.591)
-   (make-vect 0.155 0.392))
-  (make-segment
-   (make-vect 0.304 0.646)
-   (make-vect 0.403 0.646))
-  (make-segment
-   (make-vect 0.298 0.591)
-   (make-vect 0.354 0.492))
-  (make-segment ; left face
-   (make-vect 0.403 0.646)
-   (make-vect 0.348 0.845))
-  (make-segment
-   (make-vect 0.354 0.492)
-   (make-vect 0.249 0.000))
-  (make-segment
-   (make-vect 0.403 0.000)
-   (make-vect 0.502 0.293))
-  (make-segment
-   (make-vect 0.502 0.293)
-   (make-vect 0.602 0.000))
-  (make-segment
-   (make-vect 0.348 0.845)
-   (make-vect 0.403 0.999))
-  (make-segment
-   (make-vect 0.602 0.999)
-   (make-vect 0.652 0.845))
-  (make-segment
-   (make-vect 0.652 0.845)
-   (make-vect 0.602 0.646))
-  (make-segment
-   (make-vect 0.602 0.646)
-   (make-vect 0.751 0.646))
-  (make-segment
-   (make-vect 0.751 0.646)
-   (make-vect 0.999 0.343))
-  (make-segment
-   (make-vect 0.751 0.000)
-   (make-vect 0.597 0.442))
-  (make-segment
-   (make-vect 0.597 0.442)
-   (make-vect 0.999 0.144))
-  (make-segment ; eye
-   (make-vect 0.395 0.916)
-   (make-vect 0.410 0.916))
-  (make-segment ; smile
-   (make-vect 0.376 0.746)
-   (make-vect 0.460 0.790))))
+  (list
+   (make-segment
+    (make-vect 0.006 0.840)
+    (make-vect 0.155 0.591))
+   (make-segment
+    (make-vect 0.006 0.635)
+    (make-vect 0.155 0.392))
+   (make-segment
+    (make-vect 0.304 0.646)
+    (make-vect 0.155 0.591))
+   (make-segment
+    (make-vect 0.298 0.591)
+    (make-vect 0.155 0.392))
+   (make-segment
+    (make-vect 0.304 0.646)
+    (make-vect 0.403 0.646))
+   (make-segment
+    (make-vect 0.298 0.591)
+    (make-vect 0.354 0.492))
+   (make-segment ; left face
+    (make-vect 0.403 0.646)
+    (make-vect 0.348 0.845))
+   (make-segment
+    (make-vect 0.354 0.492)
+    (make-vect 0.249 0.000))
+   (make-segment
+    (make-vect 0.403 0.000)
+    (make-vect 0.502 0.293))
+   (make-segment
+    (make-vect 0.502 0.293)
+    (make-vect 0.602 0.000))
+   (make-segment
+    (make-vect 0.348 0.845)
+    (make-vect 0.403 0.999))
+   (make-segment
+    (make-vect 0.602 0.999)
+    (make-vect 0.652 0.845))
+   (make-segment
+    (make-vect 0.652 0.845)
+    (make-vect 0.602 0.646))
+   (make-segment
+    (make-vect 0.602 0.646)
+    (make-vect 0.751 0.646))
+   (make-segment
+    (make-vect 0.751 0.646)
+    (make-vect 0.999 0.343))
+   (make-segment
+    (make-vect 0.751 0.000)
+    (make-vect 0.597 0.442))
+   (make-segment
+    (make-vect 0.597 0.442)
+    (make-vect 0.999 0.144))
+   (make-segment ; eye
+    (make-vect 0.395 0.916)
+    (make-vect 0.410 0.916))
+   (make-segment ; smile
+    (make-vect 0.376 0.746)
+    (make-vect 0.460 0.790))))
 
 (defn corner-split [painter n]
- (if (= n 0)
-     painter
-     (let [up (up-split painter (- n 1))
-           right (right-split painter (- n 1))
-           corner (corner-split painter (- n 1))]
-         (beside (below painter up)
-                 (below right corner)))))
+  (if (= n 0)
+    painter
+    (let [up (up-split painter (- n 1))
+          right (right-split painter (- n 1))
+          corner (corner-split painter (- n 1))]
+      (beside (below painter up)
+              (below right corner)))))
+
+(defn flip-vert [painter]
+  (transform-painter painter
+                     (make-vect 0.0 1.0)   ; new origin
+                     (make-vect 1.0 1.0)   ; new end of edge1
+                     (make-vect 0.0 0.0))) ; new end of edge2
 
 (defn square-limit [painter n]
- (let [quarter (rotate180 (corner-split painter n))
-       half (beside (flip-horiz quarter) quarter)]
-     (below (flip-vert half) half)))
+  (let [quarter (rotate180 (corner-split painter n))
+        half (beside (flip-horiz quarter) quarter)]
+    (below (flip-vert half) half)))
+
 
 ;; Exercise 2.53
 
@@ -1150,7 +1167,7 @@
    (and (coll? a) (coll? b) (= (first a) (first b))) (equal? (rest a) (rest b))
    :else false))
 
-;; Exerise 2.55
+;; Exercise 2.55
 
 (first ''abracadabra)
 
@@ -1196,12 +1213,12 @@
   (cond (number? exp) 0
         (variable? exp) (if (same-variable? exp var) 1 0)
         (sum? exp) (make-sum (deriv (addend exp) var)
-                   (deriv (augend exp) var))
+                             (deriv (augend exp) var))
         (product? exp) (make-sum
-                         (make-product (multiplier exp)
-                             (deriv (multiplicand exp) var))
-                         (make-product (deriv (multiplier exp) var)
-                             (multiplicand exp)))
+                        (make-product (multiplier exp)
+                                      (deriv (multiplicand exp) var))
+                        (make-product (deriv (multiplier exp) var)
+                                      (multiplicand exp)))
         :else (throw (Exception. "unknown expression type -- DERIV" exp))))
 
 ;; Exercise 2.56
@@ -1226,10 +1243,10 @@
         (sum? exp) (make-sum (deriv (addend exp) var)
                              (deriv (augend exp) var))
         (product? exp) (make-sum
-                         (make-product (multiplier exp)
-                                       (deriv (multiplicand exp) var))
-                         (make-product (deriv (multiplier exp) var)
-                                       (multiplicand exp)))
+                        (make-product (multiplier exp)
+                                      (deriv (multiplicand exp) var))
+                        (make-product (deriv (multiplier exp) var)
+                                      (multiplicand exp)))
         (exponentiation? exp) (make-product
                                (make-product (exponent exp)
                                              (make-exponentiation (base exp) (dec (exponent exp))))
@@ -1350,3 +1367,766 @@
         :else (list b '** e)))
 
 
+;; Exercise 2.59
+
+(defn element-of-set? [x set]
+  (cond (empty? set) false
+        (= x (first set)) true
+        :else (element-of-set? x (rest set))))
+
+(defn adjoin-set [x set]
+  (if (element-of-set? x set)
+    set
+    (cons x set)))
+
+(defn intersection-set [set1 set2]
+  (cond (or (empty? set1) (empty? set2)) '()
+        (element-of-set? (first set1) set2) (cons (first set1)
+                                                  (intersection-set (rest set1) set2))
+        :else (intersection-set (rest set1) set2)))
+
+(defn union-set [set1 set2]
+  (cond
+   (empty? set1) set2
+   (element-of-set? (first set1) set2) (union-set (rest set1) set2)
+   :else (union-set (rest set1) (cons (first set1) set2))))
+
+;; Exercise 2.60
+
+(defn element-of-set? [x set]
+  (cond (empty? set) false
+        (= x (first set)) true
+        :else (element-of-set? x (rest set))))
+
+(defn adjoin-set [x set] (cons x set))
+
+(defn intersection-set [set1 set2]
+  (cond (or (empty? set1) (empty? set2)) '()
+        (element-of-set? (first set1) set2) (cons (first set1)
+                                                  (intersection-set (rest set1) set2))
+        :else (intersection-set (rest set1) set2)))
+
+(defn union-set [set1 set2] (concat set1 set2))
+
+;; Exercise 2.61
+
+(defn element-of-set? [x set]
+  (cond (empty? set) false
+        (= x (first set)) true
+        (< x (first set)) false
+        :else (element-of-set? x (rest set))))
+
+
+(defn intersection-set [set1 set2]
+  (if (or (empty? set1) (empty? set2)) []
+    (let [x1 (first set1) x2 (first set2)]
+      (cond (= x1 x2) (cons x1 (intersection-set (rest set1)
+                                                 (rest set2)))
+            (< x1 x2) (intersection-set (rest set1) set2)
+            (< x2 x1) (intersection-set set1 (rest set2))))))
+
+(defn adjoin-set [x set]
+  (cond
+   (empty? set) (cons x set)
+   (= x (first set)) set
+   (< x (first set)) (cons x set)
+   :else (cons (first set) (adjoin-set x (rest set)))))
+
+;; Exercise 2.62
+
+(defn union-set [set1 set2]
+  (cond
+   (empty? set1) set2
+   (empty? set2) set1
+   :else (let [x1 (first set1) x2 (first set2)]
+           (cond (= x1 x2) (cons x1 (union-set (rest set1) (rest set2)))
+                 (< x1 x2) (cons x1 (union-set (rest set1) set2))
+                 (< x2 x1) (cons x2 (union-set set1 (rest set2)))))))
+
+;; Exercise 2.63
+
+(defn entry [tree] (tree 0))
+(defn left-branch [tree] (tree 1))
+(defn right-branch [tree] (tree 2))
+(defn make-tree [entry left right] [entry left right])
+
+(defn element-of-set? [x set]
+  (cond (empty? set) false
+        (= x (entry set)) true
+        (< x (entry set)) (element-of-set? x (left-branch set))
+        (> x (entry set)) (element-of-set? x (right-branch set))))
+
+(defn adjoin-set [x set]
+  (cond (empty? set) (make-tree x [] [])
+        (= x (entry set)) set
+        (< x (entry set)) (make-tree (entry set)
+                                     (adjoin-set x (left-branch set))
+                                     (right-branch set))
+        (> x (entry set)) (make-tree (entry set)
+                                     (left-branch set)
+                                     (adjoin-set x (right-branch set)))))
+
+(defn tree->list-1 [tree]
+  (if (empty? tree) []
+    (concat (tree->list-1 (left-branch tree))
+            (cons (entry tree)
+                  (tree->list-1 (right-branch tree))))))
+
+(defn tree->list-2 [tree]
+  (defn copy-to-list [tree result-list]
+    (if (empty? tree) result-list
+      (copy-to-list (left-branch tree)
+                    (cons (entry tree)
+                          (copy-to-list (right-branch tree)
+                                        result-list)))))
+  (copy-to-list tree []))
+
+
+(def tree1 [7 [3 [1 [] []] [5 [] []]] [9 [] [11 [] []]]])
+
+(tree->list-1 tree1)
+
+(tree->list-2 tree1)
+
+(def tree2 [3 [1 [] []] [7 [5 [] []] [9 [] [11 [] []]]]])
+
+(tree->list-1 tree2)
+
+(tree->list-2 tree2)
+
+(def tree3 [5 [3 [1 [] []] []] [9 [7 [] []] [11 [] []]]])
+
+(tree->list-1 tree3)
+
+(tree->list-2 tree3)
+
+; In tree->list-1 concat is called on every recursive called
+; Append is O(length) and the length is halves on each call so log n
+; Total complexity tree->list-1 O(n logn) while tree->list-2 is just O(n)
+
+;; Exercise 2.64
+
+(defn list->tree [elements]
+  (first (partial-tree elements (count elements))))
+
+(defn partial-tree [elts n]
+  (if (= n 0) ([[] elts])
+    (let [left-size (quot (dec n) 2)
+          left-result (partial-tree elts left-size)
+          left-tree (first left-result)
+          non-left-elts (second left-result)
+          right-size (- n (inc left-size))
+          this-entry (first non-left-elts)
+          right-result (partial-tree (rest non-left-elts) right-size)
+          right-tree (first right-result)
+          remaining-elts (second right-result)
+          ]
+      [(make-tree this-entry left-tree right-tree) remaining-elts])))
+
+; The important bit is to substract 1 in the calculation of left and right size so you can extract this-entry
+; There is one recursive call for each element in the list with no expensive operands like concat so O(n)
+
+;; Exercise 2.65
+
+; Just use tree->list2 on the sets, feed them to the functions 2.61 2.62 and reconvert them back with list->tree
+
+;; Exercise 2.66
+
+(defn lookup [given-key set-of-records]
+  (cond
+   (empty? set-of-records) false
+   (= given-key (key (entry set-of-records))) (entry set-of-records)
+   (< given-key (key (entry set-of-records))) (lookup given-key (left-branch set-of-records))
+   (> given-key (key (entry set-of-records))) (lookup given-key (right-branch set-of-records))))
+
+;; Exercise 2.67
+
+(defn make-leaf [symbol weight] ['leaf symbol weight])
+(defn leaf? [object] (= (object 0) 'leaf))
+(defn symbol-leaf [x] (x 1))
+(defn weight-leaf [x] (x 2))
+
+(defn make-code-tree [left right]
+  [left right (concat (symbols left) (symbols right)) (+ (weight left) (weight right))])
+(defn left-branch [tree] (tree 0))
+(defn right-branch [tree] (tree 1))
+(defn symbols [tree]
+  (if (leaf? tree)
+    [(symbol-leaf tree)]
+    (tree 2)))
+(defn weight [tree]
+  (if (leaf? tree)
+    (weight-leaf tree)
+    (tree 3)))
+
+(defn decode [bits tree]
+  (defn decode-1 [bits current-branch]
+    (if (empty? bits) []
+      (let [next-branch (choose-branch (first bits) current-branch)]
+        (if (leaf? next-branch)
+          (cons (symbol-leaf next-branch)
+                (decode-1 (rest bits) tree))
+          (decode-1 (rest bits) next-branch)))))
+  (decode-1 bits tree))
+
+(defn choose-branch [bit branch]
+  (cond (= bit 0) (left-branch branch)
+        (= bit 1) (right-branch branch)))
+
+(defn adjoin-set [x set]
+  (cond
+   (empty? set) [x]
+   (< (weight x) (weight (first set))) (cons x set)
+   :else (cons (first set) (adjoin-set x (rest set)))))
+
+(defn make-leaf-set [pairs]
+  (if (empty? pairs) []
+    (let [pair (first pairs)]
+      (adjoin-set (make-leaf (first pair)   ; symbol
+                             (second pair)) ; frequency
+                  (make-leaf-set (rest pairs))))))
+
+(def sample-tree
+  (make-code-tree (make-leaf 'A 4)
+                  (make-code-tree
+                   (make-leaf 'B 2)
+                   (make-code-tree (make-leaf 'D 1)
+                                   (make-leaf 'C 1)))))
+
+(def sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
+
+(decode sample-message sample-tree)
+
+;; Exercise 2.68
+
+(defn encode [message tree]
+  (if (empty? message) []
+    (concat (encode-symbol (first message) tree)
+            (encode (rest message) tree))))
+
+(defn encode-symbol [symbol tree]
+  (defn in-branch? [branch]
+    (if (leaf? branch)
+      (= symbol (symbol-leaf branch))
+      (memq symbol (symbols branch))))
+  (let [lb (left-branch tree)
+        rb (right-branch tree)]
+    (cond (in-branch? lb)  (if (leaf? lb) [0] (cons 0 (encode-symbol symbol lb)))
+          (in-branch? rb)  (if (leaf? rb) [1] (cons 1 (encode-symbol symbol rb)))
+          :else (throw (RuntimeException. (str "Can't encode symbol " symbol))))))
+
+
+(encode '(A D A B B C A) sample-tree)
+
+;; Exercise 2.69
+
+(defn generate-huffman-tree [pairs]
+  (successive-merge (make-leaf-set pairs)))
+
+(defn successive-merge [trees]
+  (if (= 1 (count trees))
+    (first trees)
+    (let [a (first trees)
+          b (second trees)
+          remainder (drop 2 trees)
+          new-tree (make-code-tree a b)
+          new-trees (adjoin-set new-tree remainder)]
+      (successive-merge new-trees))))
+
+(generate-huffman-tree #{'(A 8) '(B 3) '(C 1) '(D 1) '(E 1) '(F 1) '(G 1) '(H 1)})
+
+;; Exercise 2.70
+
+(def rock-tree (generate-huffman-tree #{'(a 2) '(boom 1) '(Get 2) '(job 2) '(na 16) '(Sha 3) '(yip 9) '(Wah 1)}))
+
+(def rock-lyric '(Get a job
+                      Sha na na na na na na na na
+                      Get a job
+                      Sha na na na na na na na na
+                      Wah yip yip yip yip yip yip yip yip yip
+                      Sha boom))
+
+(def encoded-lyric (encode rock-lyric rock-tree))
+
+(< (count encoded-lyric) (* 3 (count rock-lyric)))
+
+;; Exercise 2.71
+
+; Such tree always has a leaf on its left branch so the most frequent symbol is encoded with 1 bit and the least frequent with (n - 1) bits
+
+
+;; Exercise 2.72
+
+; In a normal tree the complexity is O(n log n)
+; In a skewed tree the complexity is O(n) for the most frequent and O(n^2) for the least frequent
+; If a tree doesn't need to be modified we can store all the symbols in a map with their encodings for maximum performance
+
+
+;; Exercise 2.73
+
+; a) Because they have no type tag on their data structure. We could in principle but we have to change their representation.
+
+; b)
+
+(defn addend [s] (first s))
+
+(defn augend [s] (second s))
+
+(defn multiplier [p] (first p))
+
+(defn multiplicand [p] (second p))
+
+(defn operator [exp] (first exp))
+
+(defn operands [exp] (rest exp))
+
+(defn deriv [exp var]
+  (cond
+   (number? exp) 0
+   (variable? exp) (if (same-variable? exp var) 1 0)
+   :else ((pt-get 'deriv (operator exp)) (operands exp)
+          var)))
+
+(defn deriv-sum [exp var]
+  (make-sum (deriv (addend exp) var)
+            (deriv (augend exp) var)))
+
+(defn deriv-product [exp var]
+  (make-sum (make-product (multiplier exp)
+                          (deriv (multiplicand exp) var))
+            (make-product (deriv (multiplier exp) var)
+                          (multiplicand exp))))
+
+(def proc-table (atom {}))
+
+(defn pt-get [op type] (@proc-table [op type]))
+
+(defn pt-put [op type item] (swap! proc-table #(assoc % [op type] item)))
+
+(defn install-deriv []
+  (pt-put 'deriv '+ deriv-sum)
+  (pt-put 'deriv '* deriv-product))
+
+(install-deriv)
+
+(deriv '(* (+ x y) 3) 'x)
+
+; c)
+
+(defn base [e] (first e))
+
+(defn exponent [e] (second e))
+
+
+(defn deriv-exponentiation [expr var]
+  (let [base (base expr)
+        exponent (exponent expr)]
+    (make-product exponent
+                  (make-product (make-exponentiation base (make-sum exponent -1))
+                                (deriv base var)))))
+
+(defn install-deriv []
+  (pt-put 'deriv '+ deriv-sum)
+  (pt-put 'deriv '* deriv-product)
+  (pt-put 'deriv '** deriv-exponentiation))
+
+(install-deriv)
+
+(deriv '(** (+ x y) 3) 'x)
+
+; d) We only need to change the way we save them
+
+;; Exercise 2.74
+
+; a)
+
+(defn make-hq-file [division file]
+  (cons division file))
+(defn file-division [hq-file]
+  (first hq-file))
+(defn original-file [hq-file]
+  (second hq-file))
+
+(defn get-record [employee hq-file]
+  (let [get-record-fn (pt-get 'get-record (file-division hq-file))]
+    (get-record-fn employee (original-file hq-file))))
+
+(defn has-record? [employee division]
+  (let [has-record?-fn (pt-get 'has-record? division)]
+    (has-record?-fn employee)))
+
+; b)
+
+(defn make-hq-record [division record]
+  (cons division record))
+(defn record-division [hq-record]
+  (first hq-record))
+(defn original-record [hq-record]
+  (second hq-record))
+
+(defn get-salary [hq-file]
+  (let [get-salary-fn (pt-get 'get-salary (file-division hq-file))]
+    (get-salary-fn (original-record hq-file))))
+
+; c)
+
+(defn find-employee-record [employee files]
+  (cond
+   (empty? files) (throw (RuntimeException. (str "FIND-EMPLOYEE-RECORD : No such employee." employee)))
+   (has-record? employee (file-division (first files))) (get-record employee (first files))
+   :else (find-employee-record employee (rest files))))
+
+; d)
+
+(defn install-ultra-mega-corp [table]
+  (assoc table 'get-record :ultra-mega-corp-get-record)
+  (assoc table 'has-record? :ultra-mega-corp-has-record?)
+  (assoc table 'get-salary :ultra-mega-corp-get-salary))
+
+;; Exercise 2.75
+
+(defn apply-generic [op arg] (arg op))
+
+(defn make-from-mag-ang [m a]
+  (defn dispatch [op]
+    (cond
+     (= op 'real-part) (* m (Math/cos a))
+     (= op 'imag-part) (* m (Math/sin a))
+     (= op 'magnitude) m
+     (= op 'angle) a
+     :else (throw (RuntimeException. (str "Unknown op -- MAKE-FROM-REAL-IMAG" op)))))
+  dispatch)
+
+;; Exercise 2.76
+
+; Lots of new types -> message passing (which is basically OO)
+; Lots of new operations -> data-directed style
+
+;; Exercise 2.77
+
+(def proc-table (atom {}))
+
+(defn pt-get [op type] (@proc-table [op type]))
+
+(defn pt-put [op type item] (swap! proc-table #(assoc % [op type] item)))
+
+(defn type-tag [datum]
+  (cond (number? datum) datum
+        (coll? datum) (first datum)
+        :else (throw (RuntimeException. (str "Wrong datum -- TYPE-TAG " datum)))))
+
+(defn contents [datum]
+  (cond (number? datum) datum
+        (coll? datum) (rest datum)
+        :else (throw (RuntimeException. (str "Wrong datum -- CONTENGS " datum)))))
+
+(defn attach-tag [tag content]
+  (if (coll? content) (cons tag content) content))
+
+(defn gcd [a b]
+  (if (= b 0)
+    a
+    (gcd b (rem a b))))
+
+;;; 2.77
+
+(defn install-rectangular-package []
+  (let [real-part (fn [z] (first z))
+        imag-part (fn [z] (second z))
+        make-from-real-imag (fn [x y] [x y])
+        magnitude (fn [z]
+                    (Math/sqrt (+ (#(* % %) (real-part z))
+                                  (#(* % %) (imag-part z)))))
+        angle (fn [z]
+                (Math/atan2 (imag-part z) (real-part z)))
+        make-from-mag-ang (fn [r a]
+                            [(* r (Math/cos a))
+                             (* r (Math/sin a))])
+        tag (fn [x] (attach-tag 'rectangular x))]
+
+    (pt-put 'real-part '(rectangular) real-part)
+    (pt-put 'imag-part '(rectangular) imag-part)
+    (pt-put 'magnitude '(rectangular) magnitude)
+    (pt-put 'angle '(rectangular) angle)
+    (pt-put 'make-from-real-imag 'rectangular
+            (fn [x y] (tag (make-from-real-imag x y))))
+    (pt-put 'make-from-mag-ang 'rectangular
+            (fn [r a] (tag (make-from-mag-ang r a))))))
+
+(defn install-polar-package []
+  (let [magnitude (fn [z] (first z))
+        angle (fn [z] (second z))
+        make-from-mag-ang (fn [r a] [r a])
+        real-part (fn [z]
+                    (* (magnitude z) (Math/cos (angle z))))
+        imag-part (fn [z]
+                    (* (magnitude z) (Math/sin (angle z))))
+        make-from-real-imag (fn [x y]
+                              [(Math/sqrt (+ (#(* % %) x) (#(* % %) y)))
+                               (Math/atan2 y x)])
+        tag (fn [x] (attach-tag 'polar x))]
+
+
+    (pt-put 'real-part '(polar) real-part)
+    (pt-put 'imag-part '(polar) imag-part)
+    (pt-put 'magnitude '(polar) magnitude)
+    (pt-put 'angle '(polar) angle)
+    (pt-put 'make-from-real-imag 'polar
+            (fn [x y] (tag (make-from-real-imag x y))))
+    (pt-put 'make-from-mag-ang 'polar
+            (fn [r a] (tag (make-from-mag-ang r a))))))
+
+
+(defn apply-generic [op & args]
+  (let [type-tags (map type-tag args)
+        proc (pt-get op type-tags)]
+    (if proc
+      (apply proc (map contents args))
+      (throw (RuntimeException. (str "No method for -- " op type-tags))))))
+
+
+(defn real-part [z] (apply-generic 'real-part z))
+(defn imag-part [z] (apply-generic 'imag-part z))
+(defn magnitude [z] (apply-generic 'magnitude z))
+(defn angle [z] (apply-generic 'angle z))
+
+(defn add [x y] (apply-generic 'add x y))
+(defn sub [x y] (apply-generic 'sub x y))
+(defn mul [x y] (apply-generic 'mul x y))
+(defn div [x y] (apply-generic 'div x y))
+
+(defn install-scheme-number-package []
+  (let [tag (fn [x]
+              (attach-tag 'scheme-number x))]
+
+    (pt-put 'add '(scheme-number scheme-number)
+            (fn [x y] (tag (+ x y))))
+    (pt-put 'sub '(scheme-number scheme-number)
+            (fn [x y] (tag (- x y))))
+    (pt-put 'mul '(scheme-number scheme-number)
+            (fn [x y] (tag (* x y))))
+    (pt-put 'div '(scheme-number scheme-number)
+            (fn [x y] (tag (/ x y))))
+    (pt-put 'make 'scheme-number
+            (fn [x] (tag x)))))
+
+(defn make-scheme-number [n]
+  ((pt-get 'make 'scheme-number) n))
+
+(defn install-rational-package []
+
+  (let [numer (fn [x] (first x))
+        denom (fn [x] (second x))
+        make-rat (fn [n d] (let [g (gcd n d)] [(/ n g) (/ d g)]))
+        add-rat (fn [x y]
+                  (make-rat (+ (* (numer x) (denom y))
+                               (* (numer y) (denom x)))
+                            (* (denom x) (denom y))))
+        sub-rat (fn [x y]
+                  (make-rat (- (* (numer x) (denom y))
+                               (* (numer y) (denom x)))
+                            (* (denom x) (denom y))))
+        mul-rat (fn [x y]
+                  (make-rat (* (numer x) (numer y))
+                            (* (denom x) (denom y))))
+        div-rat (fn [x y]
+                  (make-rat (* (numer x) (denom y))
+                            (* (denom x) (numer y))))
+        tag (fn [x] (attach-tag 'rational x))
+        ]
+
+    (pt-put 'add '(rational rational)
+            (fn [x y] (tag (add-rat x y))))
+    (pt-put 'sub '(rational rational)
+            (fn [x y] (tag (sub-rat x y))))
+    (pt-put 'mul '(rational rational)
+            (fn [x y] (tag (mul-rat x y))))
+    (pt-put 'div '(rational rational)
+            (fn [x y] (tag (div-rat x y))))
+    (pt-put 'make 'rational
+            (fn [n d] (tag (make-rat n d))))))
+
+(defn make-rational [n d]
+  ((pt-get 'make 'rational) n d))
+
+
+(defn install-complex-package []
+  (let [;; imported procedures from rectangular and polar packages
+        make-from-real-imag (fn [x y]
+                              ((pt-get 'make-from-real-imag 'rectangular) x y))
+        make-from-mag-ang (fn [r a]
+                            ((pt-get 'make-from-mag-ang 'polar) r a))
+        add-complex (fn [z1 z2]
+                      (make-from-real-imag (+ (real-part z1) (real-part z2))
+                                           (+ (imag-part z1) (imag-part z2))))
+        sub-complex (fn [z1 z2]
+                      (make-from-real-imag (- (real-part z1) (real-part z2))
+                                           (- (imag-part z1) (imag-part z2))))
+        mul-complex (fn [z1 z2]
+                      (make-from-mag-ang (* (magnitude z1) (magnitude z2))
+                                         (+ (angle z1) (angle z2))))
+        div-complex (fn [z1 z2]
+                      (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
+                                         (- (angle z1) (angle z2))))
+        tag (fn [z] (attach-tag 'complex z))
+        ]
+    (pt-put 'add '(complex complex)
+            (fn [z1 z2] (tag (add-complex z1 z2))))
+    (pt-put 'sub '(complex complex)
+            (fn [z1 z2] (tag (sub-complex z1 z2))))
+    (pt-put 'mul '(complex complex)
+            (fn [z1 z2] (tag (mul-complex z1 z2))))
+    (pt-put 'div '(complex complex)
+            (fn [z1 z2] (tag (div-complex z1 z2))))
+    (pt-put 'make-from-real-imag 'complex
+            (fn [x y] (tag (make-from-real-imag x y))))
+    (pt-put 'make-from-mag-ang 'complex
+            (fn [r a] (tag (make-from-mag-ang r a))))))
+
+(install-rectangular-package)
+(install-polar-package)
+(install-scheme-number-package)
+(install-rational-package)
+(install-complex-package)
+
+(defn make-complex-from-real-imag [x y]
+  ((pt-get 'make-from-real-imag 'complex) x y))
+(defn make-complex-from-mag-ang [r a]
+  ((pt-get 'make-from-mag-ang 'complex) r a))
+
+(def z (make-complex-from-mag-ang 8 6))
+
+; This fails
+(magnitude z)
+
+(pt-put 'real-part '(complex) real-part)
+(pt-put 'imag-part '(complex) imag-part)
+(pt-put 'magnitude '(complex) magnitude)
+(pt-put 'angle '(complex) angle)
+
+(magnitude z)
+
+
+; apply-generic is invoked twice, first dispatch is magnitude of 'complex, second is magnitude of 'rectangular.
+
+;; Exercise 2.78
+
+(defn type-tag [datum]
+  (cond (number? datum) datum
+        (coll? datum) (first datum)
+        :else (throw (RuntimeException. (str "Wrong datum -- TYPE-TAG" datum)))))
+
+(defn contents [datum]
+  (cond (number? datum) datum
+        (coll? datum) (rest datum)
+        :else (throw (RuntimeException. (str "Wrong datum -- CONTENGS" datum)))))
+
+(defn attach-tag [tag content]
+  (if (coll? content) (cons tag content) content))
+
+;; Exercise 2.79
+
+(defn install-scheme-number-package []
+  (let [equ? =])
+  ; ... put
+  )
+
+(defn install-rational-package []
+  (let [equ? (fn [x y]
+    (= (* (numer x) (denom y)) (* (numer y) (denom x))))])
+  ;; ... put
+  )
+
+(defn install-complex-package []
+  ;; ...
+  (let [equ? (fn [x y]
+    (and (= (real-part x) (real-part y)) (= (imag-part x) (imag-part y))))])
+  ;; ... put
+  )
+
+(defn equ? [x y] (apply-generic 'equ? x y))
+
+;; Exercise 2.80
+
+(defn =zero? [x] (apply-generic '=zero? x))
+
+(pt-put '=zero? 'scheme-number (fn [x] (= x 0)))
+
+(pt-put '=zero? 'rational-number (fn [x] (= (numer x) 0)))
+
+(pt-put '=zero? 'complex-number  (fn [x] (= (real-part x) (imag-part x) 0)))
+
+;; Exercise 2.81
+
+;;a
+; apply-generic will go into infinite recursion.
+
+;;b
+; apply-generic just works as it is.
+
+;;c
+
+(def coercions (atom {}))
+
+(defn put-coercion [orig-type dest-type func]
+  (swap! coercions #(assoc % [orig-type dest-type] func)))
+
+(defn get-coercion [orig-type dest-type] (@coercions [orig-type dest-type]))
+
+(defn scheme-number->complex [n]
+  (make-complex-from-real-imag (contents n) 0))
+
+(put-coercion 'scheme-number 'complex scheme-number->complex)
+
+(defn apply-generic [op & args]
+  (defn no-method [type-tags]
+    (throw (RuntimeException. (str "No method for -- " op type-tags))))
+
+  (let [type-tags (map type-tag args)
+        proc (get op type-tags)]
+    (if proc
+      (apply proc (map contents args))
+      (if (= (count args) 2)
+        (let [type1 (first type-tags)
+              type2 (second type-tags)
+              a1 (first args)
+              a2 (second args)]
+          (if (= type1 type2)
+            (no-method type-tags)
+            (let [t1->t2 (get-coercion type1 type2)
+                  t2->t1 (get-coercion type2 type1)]
+              (cond
+               t1->t2 (apply-generic op (t1->t2 a1) a2)
+               t2->t1 (apply-generic op a1 (t2->t1 a2))
+               :else (no-method type-tags)))))
+        (no-method type-tags)))))
+
+
+;; Exercise 2.82
+
+(comment
+(defn apply-generic [op & args]
+  ; coercing list to a type
+  (defn coerce-list-to-type [lst type]
+    (if (empty? lst) []
+      (let [t1->t2 (get-coercion (type-tag (first lst)) type)]
+        (if t1->t2
+          (cons (t1->t2 (first lst)) (coerce-list-to-type (rest lst) type))
+          (cons (first lst) (coerce-list-to-type (rest lst) type))))))
+
+  ; applying to a list of multiple arguments
+  (defn apply-coerced [lst]
+    (if (empty? lst)
+      (throw (RuntimeException. (str "No method for -- " op)))
+      (let ((coerced-list (coerce-list-to-type args (type-tag (car lst)))))
+        (let [proc (get op (map type-tag coerced-list))]
+          (if proc
+            (apply proc (map contents coerced-list))
+            (apply-coerced (cdr lst)))))))
+
+  ; logic to prevent always coercing if there is already direct input entry
+  (let [type-tags (map type-tag args)
+        proc (get op type-tags)]
+      (if proc
+        (apply proc (map contents args))
+        (apply-coerced args)))))

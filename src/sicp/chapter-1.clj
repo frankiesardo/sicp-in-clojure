@@ -55,8 +55,8 @@
 
 (defn new-sqrt-iter [guess x]
   (new-if (good-enough? guess x)
-    guess
-    (sqrt-iter (improve guess x) x)))
+          guess
+          (sqrt-iter (improve guess x) x)))
 
 (defn new-sqrt [x]
   (new-sqrt-iter 1.0 x))
@@ -132,8 +132,8 @@
 
 (defn fun-iter [n]
   ((fn acc [n n-1 n-2 counter]
-    (if (= 0 counter) n-2
-      (acc ( + n (* 2 n-1) (* 3 n-2) ) n n-1 (dec counter)))) 2 1 0 n))
+     (if (= 0 counter) n-2
+       (acc ( + n (* 2 n-1) (* 3 n-2) ) n n-1 (dec counter)))) 2 1 0 n))
 
 ;; Exercise 1.12
 
@@ -176,8 +176,8 @@ phi-aprox-fib-for-every-n?
 (defn sin [angle]
   (do (println "angle " angle)
     (if-not (> (abs angle) 0.1)
-    angle
-    (p (sin (/ angle 3.0))))))
+      angle
+      (p (sin (/ angle 3.0))))))
 
 (defn p [x]
   (- (* 3 x) (* 4 (cube x))))
@@ -218,21 +218,21 @@ phi-aprox-fib-for-every-n?
 ;; Exercise 1.19
 
 (defn clever-fib [n]
-   (clever-fib-iter 1 0 0 1 n))
+  (clever-fib-iter 1 0 0 1 n))
 
 (defn clever-fib-iter [a b p q counter]
   (cond
-    (= counter 0) b
-    (even? counter) (clever-fib-iter a
-                      b
-                      (+ (* p p) (* q q))        ; compute p'
-                      (+ (* 2 p q) (* q q))      ; compute q'
-                      (/ counter 2))
-     :else (clever-fib-iter (+ (* b q) (* a q) (* a p))
-                         (+ (* b p) (* a q))
-                         p
-                         q
-                         (dec counter))))
+   (= counter 0) b
+   (even? counter) (clever-fib-iter a
+                                    b
+                                    (+ (* p p) (* q q))        ; compute p'
+                                    (+ (* 2 p q) (* q q))      ; compute q'
+                                    (/ counter 2))
+   :else (clever-fib-iter (+ (* b q) (* a q) (* a p))
+                          (+ (* b p) (* a q))
+                          p
+                          q
+                          (dec counter))))
 
 ;; Exercise 1.21.
 ;; Use the smallest-divisor procedure to find the smallest divisor of each of the following numbers: 199, 1999, 19999.
@@ -267,7 +267,7 @@ phi-aprox-fib-for-every-n?
 
 (defn start-prime-test [n start-time]
   (if (prime? n)
-      (report-prime (- (System/currentTimeMillis) start-time))))
+    (report-prime (- (System/currentTimeMillis) start-time))))
 
 (defn report-prime [elapsed-time]
   (println "Prime found:" elapsed-time "milliseconds"))
@@ -276,15 +276,15 @@ phi-aprox-fib-for-every-n?
   (slow-prime? n))
 
 (defn slow-prime? [n]
-   (= n (smallest-divisor n)))
+  (= n (smallest-divisor n)))
 
 (defn smallest-divisor [n]
-   (find-divisor n 2))
+  (find-divisor n 2))
 
 (defn find-divisor [n test-divisor]
-   (cond (> (square test-divisor) n) n
-         (divides? test-divisor n) test-divisor
-         :else (find-divisor n (+ test-divisor 1))))
+  (cond (> (square test-divisor) n) n
+        (divides? test-divisor n) test-divisor
+        :else (find-divisor n (+ test-divisor 1))))
 
 (defn check-all-primes [coll]
   (if-not (empty? coll)
@@ -297,25 +297,25 @@ phi-aprox-fib-for-every-n?
   (->>
    (range 1000 1100)
    (filter odd?)
-  ))
+   ))
 
 (def larger-than-10k
   (->>
    (range 10000 10100)
    (filter odd?)
-  ))
+   ))
 
 (def larger-than-100k
   (->>
    (range 100000 100100)
    (filter odd?)
-  ))
+   ))
 
 (def larger-than-1m
   (->>
    (range 1000000 1000100)
    (filter odd?)
-  ))
+   ))
 
 (check-all-primes larger-than-1m)
 
@@ -323,9 +323,9 @@ phi-aprox-fib-for-every-n?
 ;; Exercise 1.23.  The smallest-divisor procedure shown at the start of this section does lots of needless testing: After it checks to see if the number is divisible by 2 there is no point in checking to see if it is divisible by any
 
 (defn find-divisor [n test-divisor]
-   (cond (> (square test-divisor) n) n
-         (divides? test-divisor n) test-divisor
-         :else (find-divisor n (next-divisor test-divisor))))
+  (cond (> (square test-divisor) n) n
+        (divides? test-divisor n) test-divisor
+        :else (find-divisor n (next-divisor test-divisor))))
 
 (defn next-divisor [divisor]
   (if (= divisor 2) 3 (+ divisor 2)))
@@ -350,11 +350,11 @@ phi-aprox-fib-for-every-n?
 (defn expmod [base exp m]
   (cond (= exp 0) 1
         (even? exp)
-         (rem (square (expmod base (/ exp 2) m))
-                    m)
+        (rem (square (expmod base (/ exp 2) m))
+             m)
         :else
-         (rem (* base (expmod base (- exp 1) m))
-                    m)))
+        (rem (* base (expmod base (- exp 1) m))
+             m)))
 
 ;; Exercise 1.25
 
@@ -366,23 +366,23 @@ phi-aprox-fib-for-every-n?
 
 
 (defn expmod [base exp m]
-   (cond
-    (= exp 0) 1
-    (even? exp) (rem (square (expmod base (/ exp 2) m))
-                      m)
-    :else (rem (* base (expmod base (dec exp) m))
-                     m)))
+  (cond
+   (= exp 0) 1
+   (even? exp) (rem (square (expmod base (/ exp 2) m))
+                    m)
+   :else (rem (* base (expmod base (dec exp) m))
+              m)))
 
 (defn fermat-test [n a]
-   (= (expmod a n n) a))
+  (= (expmod a n n) a))
 
 (defn fermat-full [n]
-   (defn iter [a]
-     (cond
-      (= a 1) true
-      (not (fermat-test n a)) false
-      :else (iter (dec a))))
-   (iter (dec n)))
+  (defn iter [a]
+    (cond
+     (= a 1) true
+     (not (fermat-test n a)) false
+     :else (iter (dec a))))
+  (iter (dec n)))
 
 (fermat-full 561)
 
@@ -400,19 +400,19 @@ phi-aprox-fib-for-every-n?
 (defn square-check [x m]
   (if
     (and (not (or (= x 1) (= x (- m 1)))) (= (rem (* x x) m) 1))
-      0
-      (rem (* x x) m)))
+    0
+    (rem (* x x) m)))
 
 (defn expmod [base exp m]
   (cond
    (= exp 0) 1
    (even? exp) (square-check (expmod base (/ exp 2) m) m)
    :else (rem (* base (expmod base (- exp 1) m))
-                     m)))
+              m)))
 
 (defn miller-rabin-test [n]
   (defn try-it [a]
-     (= (expmod a (- n 1) n) 1))
+    (= (expmod a (- n 1) n) 1))
   (try-it (+ 2 (rand-int (- n 2)))))
 
 (miller-rabin-test 561)
@@ -431,9 +431,9 @@ phi-aprox-fib-for-every-n?
 
 (defn sum [term a nex b]
   (if (> a b)
-      0
-      (+ (term a)
-         (sum term (nex a) nex b))))
+    0
+    (+ (term a)
+       (sum term (nex a) nex b))))
 
 (defn integral [f a b dx]
   (defn add-dx [x] (+ x dx))
@@ -469,7 +469,7 @@ phi-aprox-fib-for-every-n?
 (defn sum [term a nex b]
   (defn iter [a result]
     (if (> a b) result
-        (iter (nex a) (+ result (term a)))))
+      (iter (nex a) (+ result (term a)))))
   (iter a 0))
 
 ;; Exercise 1.31
@@ -484,11 +484,11 @@ phi-aprox-fib-for-every-n?
 (defn product-iter [term a nex b]
   (defn iter [a result]
     (if (> a b) result
-        (iter (nex a) (* result (term a)))))
+      (iter (nex a) (* result (term a)))))
   (iter a 1))
 
 (defn factorial [x]
-   (product-iter identity 1 inc x))
+  (product-iter identity 1 inc x))
 
 (factorial 10)
 
@@ -506,7 +506,7 @@ pi
 (defn accumulate [combiner null-value term a next b]
   (if (> a b) null-value
     (combiner (term a)
-      (accumulate combiner null-value term (next a) next b))))
+              (accumulate combiner null-value term (next a) next b))))
 
 (defn accum-iter [combiner null-value term a next b]
   (defn iter [a result]
@@ -532,8 +532,8 @@ pi
 
 (defn gcd [a b]
   (if (= b 0)
-      a
-      (gcd b (rem a b))))
+    a
+    (gcd b (rem a b))))
 
 ;; Exercise 1.34
 
@@ -558,8 +558,8 @@ pi
     (println guess)
     (let [next (f guess)]
       (if (close-enough? guess next)
-          next
-          (try-it next))))
+        next
+        (try-it next))))
   (try-it first-guess))
 
 (defn sqrt [x]
@@ -587,9 +587,9 @@ pi
 
 (defn cont-frac-iter [n d k]
   (defn frac-iter [i acc]
-     (if (zero? i)
-       acc
-       (frac-iter (dec i) (/ (n i) (+ (d i) acc)))))
+    (if (zero? i)
+      acc
+      (frac-iter (dec i) (/ (n i) (+ (d i) acc)))))
   (frac-iter (dec k) (/ (n k) (d k))))
 
 (cont-frac (fn [n] 1.0) (fn [d] 1.0) 11)
