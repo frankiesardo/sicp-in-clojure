@@ -2012,7 +2012,7 @@
 ;; Exercise 2.78
 
 (defn type-tag [datum]
-  (cond (number? datum) datum
+  (cond (number? datum) 'scheme-number
         (coll? datum) (first datum)
         :else (throw (RuntimeException. (str "Wrong datum -- TYPE-TAG" datum)))))
 
@@ -2080,10 +2080,10 @@
 
 (defn apply-generic [op & args]
   (defn no-method [type-tags]
-    (throw (RuntimeException. (str "No method for -- " op type-tags))))
+    (throw (RuntimeException. (str "No method for -- " op " -- " type-tags))))
 
   (let [type-tags (map type-tag args)
-        proc (get op type-tags)]
+        proc (pt-get op type-tags)]
     (if proc
       (apply proc (map contents args))
       (if (= (count args) 2)
@@ -2101,6 +2101,9 @@
                :else (no-method type-tags)))))
         (no-method type-tags)))))
 
+(add (make-rational 1 2) (make-rational 3 4))
+
+(add (make-scheme-number 2) (make-complex-from-real-imag 3 4))
 
 ;; Exercise 2.82
 
