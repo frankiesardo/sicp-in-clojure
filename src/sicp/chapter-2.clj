@@ -2066,12 +2066,11 @@
 
 ;;c
 
-(def coercions (atom {}))
+(defn put-coercion [source-type target-type proc]
+  (pt-put 'coercion [source-type target-type] proc))
 
-(defn put-coercion [orig-type dest-type func]
-  (swap! coercions #(assoc % [orig-type dest-type] func)))
-
-(defn get-coercion [orig-type dest-type] (@coercions [orig-type dest-type]))
+(defn get-coercion [source-type target-type]
+  (pt-get 'coercion [source-type target-type]))
 
 (defn scheme-number->complex [n]
   (make-complex-from-real-imag (contents n) 0))
@@ -2107,7 +2106,10 @@
 
 ;; Exercise 2.82
 
-(comment
+(defn add [& args] (apply apply-generic 'add args))
+(pt-put 'add '(scheme-number scheme-number scheme-number) str)
+(pt-put 'add '(complex complex complex) str)
+
 (defn apply-generic [op & args]
   ; coercing list to a type
   (defn coerce-list-to-type [lst type]
@@ -2120,16 +2122,82 @@
   ; applying to a list of multiple arguments
   (defn apply-coerced [lst]
     (if (empty? lst)
-      (throw (RuntimeException. (str "No method for -- " op)))
-      (let ((coerced-list (coerce-list-to-type args (type-tag (car lst)))))
-        (let [proc (get op (map type-tag coerced-list))]
+      (throw (RuntimeException. (str "No method for -- " op " - " args)))
+      (let [coerced-list (coerce-list-to-type args (type-tag (first lst)))
+            proc (pt-get op (map type-tag coerced-list))]
           (if proc
             (apply proc (map contents coerced-list))
-            (apply-coerced (cdr lst)))))))
+            (apply-coerced (rest lst))))))
 
   ; logic to prevent always coercing if there is already direct input entry
   (let [type-tags (map type-tag args)
-        proc (get op type-tags)]
+        proc (pt-get op type-tags)]
       (if proc
         (apply proc (map contents args))
-        (apply-coerced args)))))
+        (apply-coerced args))))
+
+(add (make-scheme-number 2) (make-scheme-number 2) (make-scheme-number 2))
+(add (make-complex-from-real-imag 3 4) (make-complex-from-real-imag 3 4) (make-complex-from-real-imag 3 4))
+(add (make-scheme-number 2) (make-complex-from-real-imag 3 4) (make-scheme-number 2))
+
+;; Exercise 2.83
+
+; number -> rational -> complex
+
+(defn raise [x] (apply-generic 'raise x))
+
+(defn install-scheme-number-package []
+  (let [tag (fn [x]
+              (attach-tag 'scheme-number x))]
+
+    (pt-put 'add '(scheme-number scheme-number)
+            (fn [x y] (tag (+ x y))))
+    (pt-put 'sub '(scheme-number scheme-number)
+            (fn [x y] (tag (- x y))))
+    (pt-put 'mul '(scheme-number scheme-number)
+            (fn [x y] (tag (* x y))))
+    (pt-put 'div '(scheme-number scheme-number)
+            (fn [x y] (tag (/ x y))))
+    (pt-put 'raise '(scheme-number)
+            (fn [x] (make-rational x 1)))
+    (pt-put 'make 'scheme-number tag)))
+
+(defn install-rational-package []
+  (let [numer (fn [x] (first x))
+        denom (fn [x] (second x))
+        make-rat (fn [n d] (let [g (gcd n d)] [(/ n g) (/ d g)]))
+        add-rat (fn [x y]
+                  (make-rat (+ (* (numer x) (denom y))
+                               (* (numer y) (denom x)))
+                            (* (denom x) (denom y))))
+        sub-rat (fn [x y]
+                  (make-rat (- (* (numer x) (denom y))
+                               (* (numer y) (denom x)))
+                            (* (denom x) (denom y))))
+        mul-rat (fn [x y]
+                  (make-rat (* (numer x) (numer y))
+                            (* (denom x) (denom y))))
+        div-rat (fn [x y]
+                  (make-rat (* (numer x) (denom y))
+                            (* (denom x) (numer y))))
+        tag (fn [x] (attach-tag 'rational x))
+        ]
+
+    (pt-put 'add '(rational rational)
+            (fn [x y] (tag (add-rat x y))))
+    (pt-put 'sub '(rational rational)
+            (fn [x y] (tag (sub-rat x y))))
+    (pt-put 'mul '(rational rational)
+            (fn [x y] (tag (mul-rat x y))))
+    (pt-put 'div '(rational rational)
+            (fn [x y] (tag (div-rat x y))))
+    (pt-put 'raise '(rational)
+            (fn [x] (make-complex-from-real-imag (/ (numer x) (denom x)) 0)))
+    (pt-put 'make 'rational
+            (fn [n d] (tag (make-rat n d))))))
+
+(install-scheme-number-package)
+(install-rational-package)
+
+(raise (raise (make-scheme-number 3)))
+
