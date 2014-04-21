@@ -2140,6 +2140,10 @@
 (add (make-complex-from-real-imag 3 4) (make-complex-from-real-imag 3 4) (make-complex-from-real-imag 3 4))
 (add (make-scheme-number 2) (make-complex-from-real-imag 3 4) (make-scheme-number 2))
 
+; Problems
+; a) It fails for operations defined for mixed types.
+; b) It fails for operations defined on types that are not present in the argument list.
+
 ;; Exercise 2.83
 
 ; number -> rational -> complex
@@ -2201,3 +2205,44 @@
 
 (raise (raise (make-scheme-number 3)))
 
+;; Exercise 2.84
+
+(def type-levels {'scheme-number 0, 'rational 1, 'complex 2})
+
+(defn get-coercion [orig-type dest-type]
+  (let [orig-level (type-levels orig-type)
+        dest-level (type-levels dest-type)
+        level-diff (- dest-level orig-level)]
+    (if (> level-diff 0)
+      (apply comp (repeat level-diff raise))
+      nil)))
+
+(defn apply-generic [op & args]
+  ; coercing list to a type
+  (defn coerce-list-to-type [lst type]
+    (if (empty? lst) []
+      (let [t1->t2 (get-coercion (type-tag (first lst)) type)]
+        (if t1->t2
+          (cons (t1->t2 (first lst)) (coerce-list-to-type (rest lst) type))
+          (cons (first lst) (coerce-list-to-type (rest lst) type))))))
+
+  ; applying to a list of multiple arguments
+  (defn apply-coerced [lst]
+    (if (empty? lst)
+      (throw (RuntimeException. (str "No method for -- " op " - " args)))
+      (let [coerced-list (coerce-list-to-type args (type-tag (first lst)))
+            proc (pt-get op (map type-tag coerced-list))]
+          (if proc
+            (apply proc (map contents coerced-list))
+            (apply-coerced (rest lst))))))
+
+  ; logic to prevent always coercing if there is already direct input entry
+  (let [type-tags (map type-tag args)
+        proc (pt-get op type-tags)]
+      (if proc
+        (apply proc (map contents args))
+        (apply-coerced args))))
+
+(add (make-scheme-number 2) (make-scheme-number 2) (make-scheme-number 2))
+(add (make-complex-from-real-imag 3 4) (make-complex-from-real-imag 3 4) (make-complex-from-real-imag 3 4))
+(add (make-scheme-number 2) (make-complex-from-real-imag 3 4) (make-scheme-number 2))
